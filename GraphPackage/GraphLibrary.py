@@ -39,7 +39,7 @@ class D_Graph(Graph, object):
 
 
     def printscreen(self):
-        print ', '.join('({}, {})'.format(str(E.source), str(E.target)) for E in self.es)
+        print (', '.join('({}, {})'.format(str(E.source), str(E.target)) for E in self.es))
     def writeSynthesisFeature(self, SeedNum, Path2SynthesisFeature):
         return None
         '''Lines = []
@@ -192,13 +192,13 @@ class D_Graph(Graph, object):
             tmpG = stack.pop()
             if tmpG.rmsd() < rmsd_thres or len(tmpG.es)==0:
                 Arr_G.append(tmpG)
-                print 'My T: {}'.format(str(tmpG['T']))
+                print ('My T: {}'.format(str(tmpG['T'])))
             else:
                 tmp_Arr = tmpG.do_work()
                 if len(tmp_Arr) == 1 and len(tmp_Arr[0].es) == len(tmpG.es):
                     if tmpG['T'][0]==0.1 and tmpG['T'][1] ==0.1:
                         Arr_G.extend(tmp_Arr)
-                        print 'ADD XXXX'
+                        print ('ADD XXXX')
                         continue
                     else:
                         t1, t2 = tmpG['T']
@@ -232,13 +232,13 @@ class D_Graph(Graph, object):
             tmpG = stack.pop()
             if tmpG.rmsd() < rmsd_thres or len(tmpG.es) == 0:
                 Arr_G.append(tmpG)
-                print 'My P: {}'.format(str(tmpG['P']))
+                print ('My P: {}'.format(str(tmpG['P'])))
             else:
                 tmp_Arr = tmpG.do_work_2()
                 if len(tmp_Arr) == 1 and len(tmp_Arr[0].es) == len(tmpG.es):
                     if tmpG['P'][0] == 0.9 and tmpG['P'][1] == 0.9:
                         Arr_G.extend(tmp_Arr)
-                        print 'ADD XXXX'
+                        print ('ADD XXXX')
                         continue
                     else:
                         t1, t2 = tmpG['P']
@@ -273,7 +273,7 @@ class D_Graph(Graph, object):
         X = Entry.X
         # -----------------------
         if len(Clsts) <= 2:
-            print 'Num of Par is too small to be merged!\n Return original graph'
+            print ('Num of Par is too small to be merged!\n Return original graph')
             return (None, None, -1)
         Clsts_ProtG = []
         val_max = -1
@@ -379,10 +379,10 @@ class D_Graph(Graph, object):
             try:
                 Arr_G_New.append(self.subgraph(C))
             except:
-                print '$$$$'
-                print ','.join([str(v.index) for v in self.vs])
-                print Cls
-                print C
+                print ('$$$$')
+                print (','.join([str(v.index) for v in self.vs]))
+                print (Cls)
+                print (C)
         return Arr_G_New
     #---------------------------------------------
     def do_merge_2(self, thres, Arr_G):
@@ -410,10 +410,10 @@ class D_Graph(Graph, object):
             try:
                 Arr_G_New.append(self.subgraph(C))
             except:
-                print '$$$$'
-                print ','.join([str(v.index) for v in self.vs])
-                print Cls
-                print C
+                print ('$$$$')
+                print (','.join([str(v.index) for v in self.vs]))
+                print (Cls)
+                print (C)
         return Arr_G_New
     #-------------------------------------------------
     def split(self, Vertex_Idxs= None, Edge_Idxs = None):
@@ -461,7 +461,7 @@ class D_Graph(Graph, object):
         if "ClusterTupleLabel" in self.vs.attribute_names():
             return sum([sum(V["ClusterTupleLabel"]) - max(V["ClusterTupleLabel"]) for V in self.vs])
         else:
-            print 'There is no ClusterTupleLabel'
+            print ('There is no ClusterTupleLabel')
             return None
 
 
@@ -491,7 +491,7 @@ class D_LineGraph(D_Graph, object):
                 L_TwoEndNodes = list(S1.union(S2) - S1.intersection(S2))
                 L_TwoEndNodes.sort()
                 if len(L_TwoEndNodes) != 2:
-                    print "Sth is wrong"; sys.exit(1)
+                    print ("Sth is wrong"); sys.exit(1)
                 E
                 Edge_TwoEndNodes.append((L_TwoEndNodes[0], L_TwoEndNodes[1]))
                 Edge_TwoEndNodeConnected.append(True if self['OriginalGraph'].get_eid(L_TwoEndNodes[0], L_TwoEndNodes[1],
@@ -518,7 +518,7 @@ class D_LineGraph(D_Graph, object):
                 L_TwoEndNodes = list(S1.union(S2) - S1.intersection(S2))
                 L_TwoEndNodes.sort()
                 if len(L_TwoEndNodes) != 2:
-                    print "Sth is wrong"; sys.exit(1)
+                    print ("Sth is wrong"); sys.exit(1)
                 E
                 Edge_TwoEndNodes.append((L_TwoEndNodes[0], L_TwoEndNodes[1]))
                 Edge_TwoEndNodeConnected.append(True if self['OriginalGraph'].get_eid(L_TwoEndNodes[0], L_TwoEndNodes[1],
@@ -695,7 +695,7 @@ class D_LineGraph(D_Graph, object):
             val00, val01, val10, val11 = None, None, None, None
             if self['OriginalGraph'].get_eid(idx1, idx2, directed=False, error=False) >= 0:
                 val00, val01, val10, val11 = 0, 0, 0, 0
-                print "Skip edge {}".format(str(E.index))
+                print ("Skip edge {}".format(str(E.index)))
             else:
                 v = QuanTileScaler.transform(np.matrix(v))[0, 0]
                 v_diff = MMScaler.transform(np.matrix(v_diff))[0, 0]
@@ -735,7 +735,7 @@ class D_LineGraph(D_Graph, object):
     def runViterbi(self, Path2ViterbiJar, Path2FeatureFile, Path2OutFile):
         import subprocess
         subprocess.call(['java', '-jar', Path2ViterbiJar, Path2FeatureFile, Path2OutFile, '10000'])
-        print "Finish running Viterbi!"
+        print ("Finish running Viterbi!")
     def calculateLogScore(self, Labels):
         score = 0
         for V in self.vs:
@@ -791,59 +791,59 @@ class D_LineGraph(D_Graph, object):
             Selected_Label = Arr_Labels[np.random.choice(range(len(Arr_prob)), 1, p=Arr_prob)[0]]
             Arr_Scores.append(self.calculateLogScore(Selected_Label))
             if i % 500 == 0:
-                print Selected_Label
-                print Arr_Scores[-1]
-                print '---------------------'
+                print (Selected_Label)
+                print (Arr_Scores[-1])
+                print ('---------------------')
         return Arr_Scores
 
 
 
 
 
-if __name__=='__main__':
-    idx_num = 2
-    Path2GraphStructure = "../TextFolder/Graph_{}.txt".format(str(idx_num))
-    Path2GraphCluster = "../TextFolder/Graph_{}_Cluster.txt".format(str(idx_num))
-    Path2SynthesisFeature = "../TextFolder/Graph_{}_Feature.txt".format(str(idx_num))
-    Path2ViterbiFeature = "../TextFolder/Graph_{}_Feature_Viterbi.txt".format(str(idx_num))
-    Path2ViterbiOut = "../TextFolder/Graph_{}_Feature_Out.txt".format(str(idx_num))
-    from GraphAssistFunc import loadD_Graph
-    G = loadD_Graph(Path2GraphCluster, Path2GraphStructure)
-    n, eds = G.constructLineGraph()
-    LineG = D_LineGraph(G, n, eds)
-
-    matFeature = np.loadtxt(Path2SynthesisFeature)
-    ver_idx = np.abs(matFeature[:,2])==1
-    ed_idx = np.abs(matFeature[:,2])==2
-    mat_ver = matFeature[ver_idx, :]
-    mat_ed = matFeature[ed_idx, :]
-    from sklearn.preprocessing import QuantileTransformer
-    scaler = QuantileTransformer()
-    scaler.fit(np.matrix(mat_ver[:,3]).transpose())
-    val_ver = scaler.transform(np.matrix(mat_ver[:,3]).transpose())
-    matFeature[ver_idx,3] = val_ver.transpose()
-    scaler = QuantileTransformer()
-    scaler.fit(np.matrix(mat_ed[:,3]).transpose())
-    val_ed = scaler.transform(np.matrix(mat_ed[:,3]).transpose())
-    matFeature[ed_idx,3] = val_ed.transpose()
-
-    squareMatFeature = np.ones((n,n))*-1
-    for vec in matFeature.tolist():
-        squareMatFeature[int(vec[0]), int(vec[1])] = vec[3]
-        squareMatFeature[int(vec[1]), int(vec[0])] = vec[3]
-
-    LineG.setFeature(squareMatFeature)
-    LineG.WriteFeature(squareMatFeature, Path2ViterbiFeature)
-    LineG.runViterbi("../Script/ViterbiJar/ViterbiAlgorithm.jar", Path2ViterbiFeature, Path2ViterbiOut)
-
-    from MyIO import ReadViterbiOutFile
-    ViterbiLabel = ReadViterbiOutFile(Path2ViterbiOut)
-    ViterbiLabel = [i if i >0 else -1 for i in ViterbiLabel]
-    print "Viterbi Label\n", ViterbiLabel
-    print LineG.calculateLogScore(ViterbiLabel)
-    TrueLabels = LineG.vs['TrueLabel']
-    print "True Label\n", TrueLabels
-    print LineG.calculateLogScore(TrueLabels)
+#if __name__=='__main__':
+    # idx_num = 2
+    # Path2GraphStructure = "../TextFolder/Graph_{}.txt".format(str(idx_num))
+    # Path2GraphCluster = "../TextFolder/Graph_{}_Cluster.txt".format(str(idx_num))
+    # Path2SynthesisFeature = "../TextFolder/Graph_{}_Feature.txt".format(str(idx_num))
+    # Path2ViterbiFeature = "../TextFolder/Graph_{}_Feature_Viterbi.txt".format(str(idx_num))
+    # Path2ViterbiOut = "../TextFolder/Graph_{}_Feature_Out.txt".format(str(idx_num))
+    # from GraphAssistFunc import loadD_Graph
+    # G = loadD_Graph(Path2GraphCluster, Path2GraphStructure)
+    # n, eds = G.constructLineGraph()
+    # LineG = D_LineGraph(G, n, eds)
+    #
+    # matFeature = np.loadtxt(Path2SynthesisFeature)
+    # ver_idx = np.abs(matFeature[:,2])==1
+    # ed_idx = np.abs(matFeature[:,2])==2
+    # mat_ver = matFeature[ver_idx, :]
+    # mat_ed = matFeature[ed_idx, :]
+    # from sklearn.preprocessing import QuantileTransformer
+    # scaler = QuantileTransformer()
+    # scaler.fit(np.matrix(mat_ver[:,3]).transpose())
+    # val_ver = scaler.transform(np.matrix(mat_ver[:,3]).transpose())
+    # matFeature[ver_idx,3] = val_ver.transpose()
+    # scaler = QuantileTransformer()
+    # scaler.fit(np.matrix(mat_ed[:,3]).transpose())
+    # val_ed = scaler.transform(np.matrix(mat_ed[:,3]).transpose())
+    # matFeature[ed_idx,3] = val_ed.transpose()
+    #
+    # squareMatFeature = np.ones((n,n))*-1
+    # for vec in matFeature.tolist():
+    #     squareMatFeature[int(vec[0]), int(vec[1])] = vec[3]
+    #     squareMatFeature[int(vec[1]), int(vec[0])] = vec[3]
+    #
+    # LineG.setFeature(squareMatFeature)
+    # LineG.WriteFeature(squareMatFeature, Path2ViterbiFeature)
+    # LineG.runViterbi("../Script/ViterbiJar/ViterbiAlgorithm.jar", Path2ViterbiFeature, Path2ViterbiOut)
+    #
+    # from MyIO import ReadViterbiOutFile
+    # ViterbiLabel = ReadViterbiOutFile(Path2ViterbiOut)
+    # ViterbiLabel = [i if i >0 else -1 for i in ViterbiLabel]
+    # print ("Viterbi Label\n", ViterbiLabel)
+    # print (LineG.calculateLogScore(ViterbiLabel))
+    # TrueLabels = LineG.vs['TrueLabel']
+    # print ("True Label\n", TrueLabels)
+    # print (LineG.calculateLogScore(TrueLabels))
 
 
 

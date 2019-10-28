@@ -20,7 +20,7 @@ def do_work(Entry, cutoff_thres, graph_construction_type):
         for i in p:
             Labels[i] = count
         count += 1
-    print 'Finish thres: {}, G_type: {}'.format(str(cutoff_thres), str(graph_construction_type))
+    print ('Finish thres: {}, G_type: {}'.format(str(cutoff_thres), str(graph_construction_type)))
     return Object_1(cutoff_thres, graph_construction_type,Labels, resolution_para)
     #return (serial, cutoff_thres, graph_construction_type, Labels, resolution_para)
 
@@ -31,7 +31,7 @@ if __name__=='__main__':
     Dir2SelectedEntryFinal = '../MyDataSet/DynDom/SelectedEntryFinal'
     L = np.loadtxt(Path2SelectedSerial).astype('i')
     #L = list(L)
-    print L
+    print (L)
 
 
     G_Construct_Types = [0, 2]
@@ -39,7 +39,7 @@ if __name__=='__main__':
     CutOffThresholds = [7.5, 10.5, 13.5]
     
     for serial in L:
-        print 'In serial: {}'.format(str(serial))
+        print ('In serial: {}'.format(str(serial)))
         Entry = pickle.load(open(os.path.join(Dir2SelectedDynDomEntry, '{}.pkl'.format(str(int(serial)))), 'rb'))
         Membership = Entry.Membership
         Arr = []
@@ -53,10 +53,10 @@ if __name__=='__main__':
                 if val is not None:
                     Arr.append(val)
             except:
-                print "Error"
+                print ("Error")
         Obj2 = Object_2(int(serial), 'CPM', Arr, Membership)
         pickle.dump(Obj2, open(os.path.join(Dir2SelectedEntryFinal, '{}.pkl'.format(str(serial))), 'wb'), pickle.HIGHEST_PROTOCOL)
-        print 'Finish serial: {}'.format(str(serial))
+        print ('Finish serial: {}'.format(str(serial)))
 
     '''
     Entry = pickle.load(open(os.path.join(Dir2SelectedDynDomEntry, '{}.pkl'.format(str(int(L[33])))), 'rb'))

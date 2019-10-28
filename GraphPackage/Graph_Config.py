@@ -3,7 +3,7 @@
 Path2ViterbiJar = '../Script/ViterbiJar/ViterbiAlgorithm.jar'
 CutOffContact = 7.5
 G_ConstructType = 2
-NumberOfClusterInClusteringGraph = 25
+NumberOfClusterInClusteringGraph = 20
 '''
 Construct type:
     @0: DisMx(pair) <= threshold, single edges, weights as number of contacts
