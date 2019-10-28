@@ -1,0 +1,4 @@
+#!/home/linh/PycharmProjects/Git_Respo/Protein-Rigid-Domains-Estimation/venv/bin/python
+"""Small script to execute the igraph command line interface"""
+from igraph.app.shell import main
+main()
