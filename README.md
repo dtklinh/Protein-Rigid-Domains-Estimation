@@ -13,10 +13,10 @@
 
 # Usage
 
-from Functions import run_Alg
-PredictedLabels = run_Alg(XYZs)
+    from Functions import run_Alg
+    PredictedLabels = run_Alg(XYZs)
 
-Input: XYZs is 3D matrix (M x N x 3), where M is the number of conformations, N is the number of amino acids in protein, each row of matrix N x 3 is the coordinate
-of Carbon-alpha in three dimensional space.
+    Input: XYZs is 3D matrix (M x N x 3), where M is the number of conformations, N is the number of amino acids in protein, each row of matrix N x 3 is the coordinate
+    of Carbon-alpha in three dimensional space.
 
-Output: PredictedLabels is a vector length N which contains the index of rigid domain for each amino acid in the protein.
+    Output: PredictedLabels is a vector length N which contains the index of rigid domain for each amino acid in the protein.
