@@ -192,13 +192,13 @@ class D_Graph(Graph, object):
             tmpG = stack.pop()
             if tmpG.rmsd() < rmsd_thres or len(tmpG.es)==0:
                 Arr_G.append(tmpG)
-                print ('My T: {}'.format(str(tmpG['T'])))
+                #print ('My T: {}'.format(str(tmpG['T'])))
             else:
                 tmp_Arr = tmpG.do_work()
                 if len(tmp_Arr) == 1 and len(tmp_Arr[0].es) == len(tmpG.es):
                     if tmpG['T'][0]==0.1 and tmpG['T'][1] ==0.1:
                         Arr_G.extend(tmp_Arr)
-                        print ('ADD XXXX')
+                        #print ('ADD XXXX')
                         continue
                     else:
                         t1, t2 = tmpG['T']
