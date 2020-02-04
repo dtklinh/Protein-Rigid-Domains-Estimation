@@ -132,10 +132,10 @@ def ConstructPerfectGraph(DisMxs, Membership, Construct_Type=None, cut_off_thres
 
 
 
-def ConstructRealClusterGraph(DisMxs, Membership, Construct_Type=None, cut_off_threshold = None):
+def ConstructRealClusterGraph(DisMxs, Membership, Construct_Type=None, cut_off_threshold = None, init_membership = None, edge_weight_factors = None):
     from Graph_Config import NumberOfClusterInClusteringGraph
     G = ConstructGraph(DisMxs, Construct_Type, cut_off_threshold)
-    partitions, _ = partition_gievenNumPar(G, NumberOfClusterInClusteringGraph)
+    partitions, _ = partition_gievenNumPar(G, NumPar=NumberOfClusterInClusteringGraph,init_membership = init_membership, edge_weight_factors = edge_weight_factors)
     Memmership_Idx = set(Membership)
     Memmership_Idx = list(Memmership_Idx)
     Memmership_Idx.sort()
@@ -168,7 +168,7 @@ def ConstructRealClusterGraph(DisMxs, Membership, Construct_Type=None, cut_off_t
 
 
 
-def partition_gievenNumPar(G, NumPar= None):
+def partition_gievenNumPar(G, NumPar= None, init_membership = None, edge_weight_factors = None):
     if NumPar is None:
         if 15 <= len(G.vs)/10 <= 30:
             NumPar = len(G.vs)/10
@@ -180,14 +180,16 @@ def partition_gievenNumPar(G, NumPar= None):
     count = 0
     thres = None
     w = G.es['weight']
+    if edge_weight_factors is not None:
+        w = w*edge_weight_factors
     partitions = None
     if NumPar <=0 or NumPar > len(G.vs):
         print ("Numpar {} is wrong number".format(str(NumPar)))
         sys.exit()
     while True:
         thres = (low + high)/2
-        partitions = louvain.find_partition(G, louvain.CPMVertexPartition,
-                weights=w,resolution_parameter = thres)
+        partitions = louvain.find_partition(G, partition_type=louvain.CPMVertexPartition,
+                initial_membership=init_membership, weights=w,resolution_parameter = thres)
         count += 1
         if np.abs(len(partitions) - NumPar) ==0 or count > 30:
             break

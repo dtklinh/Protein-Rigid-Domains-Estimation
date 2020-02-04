@@ -21,15 +21,16 @@ def calc_DisMxs(XYZ):
 
 
 
-def run_Alg(XYZ):
+def run_Alg(XYZ, Serial = 'ADK', cutoff_neighborhood = 7.5, init_membership = None, edge_weight_factors = None, merging_threshold=1.0):
     # DisMatrices: m x L x L --> m distance matrices of L x L
     DisMatrices = calc_DisMxs(XYZ)
 
 
     Mem = [0]*DisMatrices.shape[1]
     Entry = DynDomEntry(None, Mem, DisMatrices, XYZ)
-    G = ConstructRealClusterGraph(Entry.DistanceMatrices, Entry.Membership,
-                                  Construct_Type=G_ConstructType, cut_off_threshold=CutOffContact)
+    G = ConstructRealClusterGraph(Entry.DistanceMatrices, Entry.Membership,init_membership = init_membership,
+                                  edge_weight_factors = edge_weight_factors,
+                                  Construct_Type=G_ConstructType, cut_off_threshold=cutoff_neighborhood)
     SquareMatFeature = G.calc_squareMatFeature(Entry.DistanceMatrices)
     G.vs['color'] = [List_Colors[v['TrueLabel']] for v in G.vs]
     G['DynDomEntry'] = Entry
@@ -37,11 +38,12 @@ def run_Alg(XYZ):
     G.vs['OriginalIndex'] = [v.index for v in G.vs]
     G.es['OriginalIndex'] = [e.index for e in G.es]
     G_Org_Indexs = [i for v in G.vs for i in v['Cluster']]
-    G['serial'] = 'ADK'
+    G['serial'] = Serial
     Membership = Mem
     delete_indexs = [i for i in range(len(Membership)) if i not in G_Org_Indexs]
     # do iteration
     Arr = G.do_work_iteration_2(rmsd_thres=3.5)
+    Arr = G.do_merge_2(thres=merging_threshold, Arr_G=Arr)
 
     PredLabels = [-1] * len(Membership)
     for idx, c in enumerate(Arr):
