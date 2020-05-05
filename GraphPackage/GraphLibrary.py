@@ -2,12 +2,12 @@ import igraph as ig
 from igraph import Graph
 import numpy as np
 import sys, os
-from AssistantObjects import Feature_Workhouse
-from AssistantObjects import DynDomEntry
+from GraphPackage.AssistantObjects import Feature_Workhouse
+from GraphPackage.AssistantObjects import DynDomEntry
 from csb.bio.utils import rmsd
-from PathAndDir import Dir2TmpFile
-from Graph_Config import Path2ViterbiJar
-from MyIO import ReadViterbiOutFile
+from mainPackage.PathAndDir import Dir2TmpFile
+from GraphPackage.Graph_Config import Path2ViterbiJar
+from Utils.MyIO import ReadViterbiOutFile
 
 class D_Graph(Graph, object):
     def __init__(self, n, edges, directed=False, graph_attrs={}, vertex_attrs={}, edge_attrs={}):

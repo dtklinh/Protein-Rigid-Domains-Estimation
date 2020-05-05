@@ -1,9 +1,10 @@
 from Bio.PDB.PDBParser import PDBParser
-from Graph_Util_Funcs import ConstructRealClusterGraph
-from Graph_Config import G_ConstructType, CutOffContact, List_Colors
-from AssistantObjects import DynDomEntry
+from GraphPackage.Graph_Util_Funcs import ConstructRealClusterGraph
+from GraphPackage.Graph_Config import G_ConstructType, CutOffContact, List_Colors
+from GraphPackage.AssistantObjects import DynDomEntry
 import numpy as np
 from scipy import spatial
+from Bio.PDB import *
 import sys
 # def calDistanceMatrix(PDBID, ChainID, PDBFile):
 #     parser = PDBParser(PERMISSIVE=1)
@@ -13,6 +14,23 @@ import sys
 #     for Model in structure:
 #         for
 
+def PreProcess_Local(Path2PDBFile:str, name:str, chainID:str):
+    from mainPackage.Allign import get_structure_local
+    # File contains all protein conformational states
+    #Path2PDBFile = '../MyDataSet/adk/adk.pdb'
+    structs, mask = get_structure_local(Path2PDBFile,name,chainID)
+    if mask is not None:
+        return np.compress((mask.mean(axis=0) == 1), structs, axis=1)
+    else:
+        return structs
+
+def PreProcess_PDBIDs(LstPDB_Chains:list):
+    joined_str = ','.join(LstPDB_Chains)
+    from mainPackage.Allign import get_structure
+    strucs, mask = get_structure(joined_str)
+    desired_structured = np.compress((mask.mean(axis=0) == 1), strucs, axis=1)
+    return desired_structured
+
 def calc_DisMxs(XYZ):
     M = np.zeros((XYZ.shape[0],XYZ.shape[1], XYZ.shape[1]))
     for idx, xyz in enumerate(XYZ):
@@ -20,8 +38,7 @@ def calc_DisMxs(XYZ):
     return M
 
 
-
-def run_Alg(XYZ, Serial = 'ADK', cutoff_neighborhood = 7.5, init_membership = None, edge_weight_factors = None, merging_threshold=1.0):
+def run_Alg(XYZ, Serial = 'ADK', cutoff_neighborhood = 7.5, init_membership = None, merging_threshold=1.0):
     # DisMatrices: m x L x L --> m distance matrices of L x L
     DisMatrices = calc_DisMxs(XYZ)
 
@@ -29,7 +46,6 @@ def run_Alg(XYZ, Serial = 'ADK', cutoff_neighborhood = 7.5, init_membership = No
     Mem = [0]*DisMatrices.shape[1]
     Entry = DynDomEntry(None, Mem, DisMatrices, XYZ)
     G = ConstructRealClusterGraph(Entry.DistanceMatrices, Entry.Membership,init_membership = init_membership,
-                                  edge_weight_factors = edge_weight_factors,
                                   Construct_Type=G_ConstructType, cut_off_threshold=cutoff_neighborhood)
     SquareMatFeature = G.calc_squareMatFeature(Entry.DistanceMatrices)
     G.vs['color'] = [List_Colors[v['TrueLabel']] for v in G.vs]
@@ -43,7 +59,7 @@ def run_Alg(XYZ, Serial = 'ADK', cutoff_neighborhood = 7.5, init_membership = No
     delete_indexs = [i for i in range(len(Membership)) if i not in G_Org_Indexs]
     # do iteration
     Arr = G.do_work_iteration_2(rmsd_thres=3.5)
-    Arr = G.do_merge_2(thres=merging_threshold, Arr_G=Arr)
+    Arr = G.do_merge(thres=merging_threshold, Arr_G=Arr)
 
     PredLabels = [-1] * len(Membership)
     for idx, c in enumerate(Arr):
@@ -53,7 +69,24 @@ def run_Alg(XYZ, Serial = 'ADK', cutoff_neighborhood = 7.5, init_membership = No
     PredLabels = [i for j, i in enumerate(PredLabels) if j not in delete_indexs]
     return PredLabels
 
+class RigidDomainFinder(object):
+    def __init__(self, AA_cutoff_neighborhood = 7.5, init_membership = None, merging_threshold=1.0):
+        self.AA_cutoff_neighborhood = AA_cutoff_neighborhood
+        self.init_membership = init_membership
+        self.merging_threshold = merging_threshold
+    def segment_by_PDBIDs(self, Lst_PDBs:list):
+        struct = PreProcess_PDBIDs(Lst_PDBs)
+        PredLabels = run_Alg(struct,'Protein_name',self.AA_cutoff_neighborhood,self.init_membership,self.merging_threshold)
+        return PredLabels
+    def segment_by_PDBFile(self,Path2PDBFile:str, PDBID:str,ChainID:str):
+        struct = PreProcess_Local(Path2PDBFile,PDBID,ChainID)
+        PredLabels = run_Alg(struct,PDBID, self.AA_cutoff_neighborhood,self.init_membership,self.merging_threshold)
+        return PredLabels
 if __name__=="__main__":
+    RDF = RigidDomainFinder()
+    PredLabels = RDF.segment_by_PDBIDs(['1ake_A', '4ake_A'])
+    print(PredLabels)
+    sys.exit(1)
     Path2DisMx1 = '../ADK/dist_1.txt'
     Path2DisMx2 = '../ADK/dist_2.txt'
     Path2XYZ1   = '../ADK/xyz_1.txt'

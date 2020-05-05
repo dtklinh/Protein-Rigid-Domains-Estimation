@@ -1,10 +1,10 @@
 '''Construct Graph from multiple Distance Matrices'''
-import Graph_Config as cf
+import GraphPackage.Graph_Config as cf
 import numpy as np
 import igraph as ig
 import math, louvain, sys
 from igraph import Graph
-from GraphLibrary import D_Graph
+from GraphPackage.GraphLibrary import D_Graph
 
 def ConstructGraph(DisMxs, Construct_Type=None, cut_off_threshold = None, Membership=None):
     # print shape(ListDisMx)
@@ -132,10 +132,16 @@ def ConstructPerfectGraph(DisMxs, Membership, Construct_Type=None, cut_off_thres
 
 
 
-def ConstructRealClusterGraph(DisMxs, Membership, Construct_Type=None, cut_off_threshold = None, init_membership = None, edge_weight_factors = None):
+def ConstructRealClusterGraph(DisMxs, Membership, Construct_Type=None, cut_off_threshold = None, init_membership = None):
     from Graph_Config import NumberOfClusterInClusteringGraph
     G = ConstructGraph(DisMxs, Construct_Type, cut_off_threshold)
-    partitions, _ = partition_gievenNumPar(G, NumPar=NumberOfClusterInClusteringGraph,init_membership = init_membership, edge_weight_factors = edge_weight_factors)
+
+    val = 0.75
+    wei = [1]*len(G.es)
+    if init_membership is not None:
+        wei = [1 if init_membership[e.source] == init_membership[e.target] else val for e in G.es]
+
+    partitions, _ = partition_gievenNumPar(G, NumPar=NumberOfClusterInClusteringGraph,edge_weight_factors = wei)
     Memmership_Idx = set(Membership)
     Memmership_Idx = list(Memmership_Idx)
     Memmership_Idx.sort()
@@ -168,7 +174,7 @@ def ConstructRealClusterGraph(DisMxs, Membership, Construct_Type=None, cut_off_t
 
 
 
-def partition_gievenNumPar(G, NumPar= None, init_membership = None, edge_weight_factors = None):
+def partition_gievenNumPar(G, NumPar= None, edge_weight_factors = None):
     if NumPar is None:
         if 15 <= len(G.vs)/10 <= 30:
             NumPar = len(G.vs)/10
@@ -181,7 +187,7 @@ def partition_gievenNumPar(G, NumPar= None, init_membership = None, edge_weight_
     thres = None
     w = G.es['weight']
     if edge_weight_factors is not None:
-        w = w*edge_weight_factors
+        w = [a * b for a, b in zip(w, edge_weight_factors)]
     partitions = None
     if NumPar <=0 or NumPar > len(G.vs):
         print ("Numpar {} is wrong number".format(str(NumPar)))
@@ -189,7 +195,7 @@ def partition_gievenNumPar(G, NumPar= None, init_membership = None, edge_weight_
     while True:
         thres = (low + high)/2
         partitions = louvain.find_partition(G, partition_type=louvain.CPMVertexPartition,
-                initial_membership=init_membership, weights=w,resolution_parameter = thres)
+                weights=w,resolution_parameter = thres)
         count += 1
         if np.abs(len(partitions) - NumPar) ==0 or count > 30:
             break

@@ -1,5 +1,5 @@
 import os
-from Graph_Config import CutOffContact
+from GraphPackage.Graph_Config import CutOffContact
 #Dir2Base = '../MyDataSet/DynDom/Perfect/BackUp/WithoutScaler_10.5'
 
 Dir2Base = '../Output'
