@@ -1,17 +1,17 @@
 # Protein-Rigid-Domains-Estimation
     Given the protein structural conformations, this program estimates the rigid domains in this protein.
 # Compatibility
-    Ubuntu version at least 16.04 LTS
-    Python 3
+    Ubuntu 16.04 LTS or later
+    Python 3.5 or later
 # Python packages dependencies:
-    biopython
-    csb
-    louvain
-    matplotlib
-    numpy
-    python-igraph
-    scikit-learn
-    scipy
+    biopython (1.73 or later) from https://biopython.org/
+    csb (1.2.5 or later) from https://csb.codeplex.com/
+    louvain (0.6.1 or later) from https://pypi.python.org/pypi/louvain/
+    matplotlib (only to draw praph) (3.0.3 or later) from matplotlib.org
+    numpy (1.16.4 or later)
+    python-igraph (0.7.1 or later) from https://igraph.org/python/
+    scikit-learn (0.21.3 or later) from https://scikit-learn.org/stable/
+    scipy (1.3.1 or later) from https://www.scipy.org/
 # other package dependencies:
     clustal omega
     (sudo apt-get install -y clustalo)
@@ -45,7 +45,8 @@
     # Notice: when two or more protein conformations have different size, 
         we use Clustal Omega to allign those sequences
     # An example of how to use the software could be found at mainPackage/main.py
-    
+    # Hint: clone this project, open with Pycharm and run file mainPackage/main.py
+        to have the impression how this algorithm works    
     
 Protein-Rigid-Domains-Estimation is open source and distributed under OSI-approved MIT license. ::
 
