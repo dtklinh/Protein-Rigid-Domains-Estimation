@@ -21,7 +21,7 @@
     The users could either calculate rigid domains via a PDB file 
     which contains all protein conformations or a list of PDBIDs.
     For example:
-    from mainPackage.Functions import RigidDomainFinder
+    First, we initializeRea an object RigidDomainFinder
     RDF = RigidDomainFinder(AA_cutoff_neighborhood = 7.5, init_membership = None, merging_threshold=1.0)
         # parameters:
             AA_cutoff_neighborhood: value of cutoff neighborhood between 
@@ -30,6 +30,7 @@
                 For example: [0, 0, 0, 1, 1, 2, 2, 1,...]. The defualt value is None
             merging_threshold: the value of merging threshold in the post-processing. 
                 The default value is 1.0
+    # Then, we run the algorithm
     # Method 1: given the list of PDBIDs
     PredLabels = RDF.segment_by_PDBIDs(['1ake_A', '4ake_A'])
     
