@@ -8,7 +8,7 @@
     csb (1.2.5 or later) from https://csb.codeplex.com/
     louvain (0.6.1 or later) from https://pypi.python.org/pypi/louvain/
     matplotlib (only to draw praph) (3.0.3 or later) from matplotlib.org
-    numpy (1.16.4 or later)
+    numpy (1.16.4 or later) from https://numpy.org/
     python-igraph (0.7.1 or later) from https://igraph.org/python/
     scikit-learn (0.21.3 or later) from https://scikit-learn.org/stable/
     scipy (1.3.1 or later) from https://www.scipy.org/
