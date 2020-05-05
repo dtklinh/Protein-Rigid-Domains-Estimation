@@ -18,22 +18,28 @@
 
 # Usage
     There are two ways to use this software.
-    The users could either calculate rigid domains via a PDB file which contains all protein conformations or a list of PDBIDs.
+    The users could either calculate rigid domains via a PDB file 
+    which contains all protein conformations or a list of PDBIDs.
     For example:
     from mainPackage.Functions import RigidDomainFinder
     RDF = RigidDomainFinder(AA_cutoff_neighborhood = 7.5, init_membership = None, merging_threshold=1.0)
         # parameters:
-            AA_cutoff_neighborhood: value of cutoff neighborhood between two amino acids (in Angstrom), default value is 7.5
-            init_membership: a list of labels of initial segmentation. For example: [0, 0, 0, 1, 1, 2, 2, 1,...]. The defualt value is None
-            merging_threshold: the value of merging threshold in the post-processing. The default value is 1.0
+            AA_cutoff_neighborhood: value of cutoff neighborhood between 
+                two amino acids (in Angstrom), default value is 7.5
+            init_membership: a list of labels of initial segmentation. 
+                For example: [0, 0, 0, 1, 1, 2, 2, 1,...]. The defualt value is None
+            merging_threshold: the value of merging threshold in the post-processing. 
+                The default value is 1.0
     # Method 1: given the list of PDBIDs
     PredLabels = RDF.segment_by_PDBIDs(['1ake_A', '4ake_A'])
     
-    # Method 2: given a path to PDB file. This file contains all models of a protein chain. An example could be found at file 'adk.pdb'
+    # Method 2: given a path to PDB file. 
+        This file contains all models of a protein chain. An example could be found at file 'adk.pdb'
     Path2PDBFile = 'adk.pdb'
     PredLabels = RDF.segment_by_PDBFile(Path2PDBFile,'ADK','A')
     
-    # Notice: when two or more protein conformations have different size, we use Clustal Omega to allign those sequences
+    # Notice: when two or more protein conformations have different size, 
+        we use Clustal Omega to allign those sequences
     # An example of how to use the software could be found at mainPackage/main.py
     
     
