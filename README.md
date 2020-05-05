@@ -32,12 +32,15 @@
                 The default value is 1.0
     # Then, we run the algorithm
     # Method 1: given the list of PDBIDs
-    PredLabels = RDF.segment_by_PDBIDs(['1ake_A', '4ake_A'])
-    
+    PredLabels = RDF.segment_by_PDBIDs(Lst_PDBs=['1ake_A', '4ake_A'])
+        # parameter: Lst_PDBs: a list contains all PDBIDs and their chainID
     # Method 2: given a path to PDB file. 
         This file contains all models of a protein chain. An example could be found at file 'adk.pdb'
-    Path2PDBFile = 'adk.pdb'
-    PredLabels = RDF.segment_by_PDBFile(Path2PDBFile,'ADK','A')
+    PredLabels = RDF.segment_by_PDBFile(Path2PDBFile='adk.pdb',PDBID='ADK',ChainID='A')
+        # parameters:
+            Path2PDBFile: a path 2 PDB file
+            PDBID: any string (not important to the algorithm)
+            ChainID: Chain ID of a protein
     
     # Notice: when two or more protein conformations have different size, 
         we use Clustal Omega to allign those sequences
