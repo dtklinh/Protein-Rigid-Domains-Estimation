@@ -1,5 +1,3 @@
-import numpy as np
-from Functions import run_Alg
 from mainPackage.Functions import RigidDomainFinder
 
 
