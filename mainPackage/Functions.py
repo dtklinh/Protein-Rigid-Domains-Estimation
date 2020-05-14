@@ -38,7 +38,8 @@ def calc_DisMxs(XYZ):
     return M
 
 
-def run_Alg(XYZ, Serial = 'ADK', cutoff_neighborhood = 7.5, init_membership = None, merging_threshold=1.0):
+def run_Alg(XYZ, Serial = 'ADK', cutoff_neighborhood = 7.5, init_membership = None, merging_threshold=1.0,
+            rigidity_threshold = 3.5):
     # DisMatrices: m x L x L --> m distance matrices of L x L
     DisMatrices = calc_DisMxs(XYZ)
 
@@ -58,7 +59,7 @@ def run_Alg(XYZ, Serial = 'ADK', cutoff_neighborhood = 7.5, init_membership = No
     Membership = Mem
     delete_indexs = [i for i in range(len(Membership)) if i not in G_Org_Indexs]
     # do iteration
-    Arr = G.do_work_iteration_2(rmsd_thres=3.5)
+    Arr = G.do_work_iteration_2(rmsd_thres=rigidity_threshold)
     Arr = G.do_merge(thres=merging_threshold, Arr_G=Arr)
 
     PredLabels = [-1] * len(Membership)
@@ -70,21 +71,38 @@ def run_Alg(XYZ, Serial = 'ADK', cutoff_neighborhood = 7.5, init_membership = No
     return PredLabels
 
 class RigidDomainFinder(object):
-    def __init__(self, AA_cutoff_neighborhood = 7.5, init_membership = None, merging_threshold=1.0):
+    def __init__(self, AA_cutoff_neighborhood = 7.5, init_membership = None, merging_threshold=1.0, rigidity_threshold = 3.5):
         self.AA_cutoff_neighborhood = AA_cutoff_neighborhood
         self.init_membership = init_membership
         self.merging_threshold = merging_threshold
+        self.rigidity_threshold = rigidity_threshold
     def segment_by_PDBIDs(self, Lst_PDBs:list):
         struct = PreProcess_PDBIDs(Lst_PDBs)
-        PredLabels = run_Alg(struct,'Protein_name',self.AA_cutoff_neighborhood,self.init_membership,self.merging_threshold)
+        PredLabels = run_Alg(struct,'Protein_name',self.AA_cutoff_neighborhood,self.init_membership,
+                             self.merging_threshold, self.rigidity_threshold)
         return PredLabels
     def segment_by_PDBFile(self,Path2PDBFile:str, PDBID:str,ChainID:str):
         struct = PreProcess_Local(Path2PDBFile,PDBID,ChainID)
-        PredLabels = run_Alg(struct,PDBID, self.AA_cutoff_neighborhood,self.init_membership,self.merging_threshold)
+        PredLabels = run_Alg(struct,PDBID, self.AA_cutoff_neighborhood,self.init_membership,
+                             self.merging_threshold, self.rigidity_threshold)
         return PredLabels
+    def segment_by_xyzFormat(self, Path_to_xyz_format:str):
+        from MDAnalysis.coordinates.XYZ import XYZReader
+        rd = XYZReader(Path_to_xyz_format)
+        Structs = np.zeros((rd.n_frames,rd.n_atoms,3))
+        for idx, ts in enumerate(rd.trajectory):
+            tmp = ts.positions
+            Structs[idx,:,:] = tmp
+        PredLabels = run_Alg(Structs,'Name',self.AA_cutoff_neighborhood,self.init_membership,
+                             self.merging_threshold, self.rigidity_threshold)
+        return PredLabels
+
+
+
 if __name__=="__main__":
     RDF = RigidDomainFinder()
-    PredLabels = RDF.segment_by_PDBIDs(['1ake_A', '4ake_A'])
+    #PredLabels = RDF.segment_by_xyzFormat('../test/data/lysozyme.xyz')
+    PredLabels = RDF.segment_by_PDBIDs(['3lww_A', '3lww_C'])
     print(PredLabels)
     sys.exit(1)
     Path2DisMx1 = '../ADK/dist_1.txt'

@@ -12,6 +12,7 @@
     python-igraph (0.7.1 or later) from https://igraph.org/python/
     scikit-learn (0.21.3 or later) from https://scikit-learn.org/stable/
     scipy (1.3.1 or later) from https://www.scipy.org/
+    MDAnalysis (0.20.1 or later) from https://www.mdanalysis.org
 # other package dependencies:
     clustal omega
     (sudo apt-get install -y clustalo)
@@ -22,7 +23,8 @@
     which contains all protein conformations or a list of PDBIDs.
     For example:
     First, we initializeRea an object RigidDomainFinder
-    RDF = RigidDomainFinder(AA_cutoff_neighborhood = 7.5, init_membership = None, merging_threshold=1.0)
+    RDF = RigidDomainFinder(AA_cutoff_neighborhood = 7.5, init_membership = None, merging_threshold=1.0,
+                            rigidity_threshold=3.5)
         # parameters:
             AA_cutoff_neighborhood: value of cutoff neighborhood between 
                 two amino acids (in Angstrom), default value is 7.5
@@ -30,18 +32,21 @@
                 For example: [0, 0, 0, 1, 1, 2, 2, 1,...]. The defualt value is None
             merging_threshold: the value of merging threshold in the post-processing. 
                 The default value is 1.0
+            rigidity_threshold: a RMSD threshold to decide if this domain is rigid
+                Default value is 3.5 (in Angstrong)
     # Then, we run the algorithm
     # Method 1: given the list of PDBIDs
     PredLabels = RDF.segment_by_PDBIDs(Lst_PDBs=['1ake_A', '4ake_A'])
         # parameter: Lst_PDBs: a list contains all PDBIDs and their chainID
     # Method 2: given a path to PDB file. 
         This file contains all models of a protein chain. An example could be found at file 'adk.pdb'
-    PredLabels = RDF.segment_by_PDBFile(Path2PDBFile='adk.pdb',PDBID='ADK',ChainID='A')
+    PredLabels = RDF.segment_by_PDBFile(Path2PDBFile='test/data/adk.pdb',PDBID='ADK',ChainID='A')
         # parameters:
             Path2PDBFile: a path 2 PDB file
             PDBID: any string (not important to the algorithm)
             ChainID: Chain ID of a protein
-    
+    # Method 3: given a path to VMD-like xyz format file
+    PredLabels = rf.segment_by_xyzFormat('test/data/lysozyme.xyz')
     # Notice: when two or more protein conformations have different size, 
         we use Clustal Omega to allign those sequences
     # An example of how to use the software could be found at mainPackage/main.py
