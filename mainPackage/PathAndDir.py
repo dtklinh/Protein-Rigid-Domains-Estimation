@@ -1,15 +1,18 @@
-import os
+import os, sys
+from pathlib import Path
+#import pathlib
 from GraphPackage.Graph_Config import CutOffContact
 #Dir2Base = '../MyDataSet/DynDom/Perfect/BackUp/WithoutScaler_10.5'
 
-Dir2Base = '../Output'
+Root_Dir = Path(__file__).parent.parent.absolute()
+Dir2Base = os.path.join(str(Root_Dir),'Output') #'../Output'
 #Dir2Base = os.path.join(Dir2Base, str(CutOffContact))
 
-Dir2SelectedDynDomEntry     = '../MyDataSet/DynDom/SelectedDynDomEntry'
-Path2SelectedSerial         = '../MyDataSet/DynDom/SerialList.txt'
-Dir2SelectedEntryFinal      = '../MyDataSet/DynDom/SelectedEntryFinal'
+#Dir2SelectedDynDomEntry     = '../MyDataSet/DynDom/SelectedDynDomEntry'
+#Path2SelectedSerial         = '../MyDataSet/DynDom/SerialList.txt'
+#Dir2SelectedEntryFinal      = '../MyDataSet/DynDom/SelectedEntryFinal'
 
-
+Path2ViterbiJar = os.path.join(str(Root_Dir),'Script/ViterbiJar/ViterbiAlgorithm.jar')
 Dir2ClusterGraph            = os.path.join(Dir2Base, 'ClusterGraph') #'../MyDataSet/DynDom/Perfect/Graph'
 Dir2LineGraph               = os.path.join(Dir2Base, 'LineGraph') #'../MyDataSet/DynDom/Perfect/LineGraph'
 Dir2ViterbiFeature          = os.path.join(Dir2Base, 'ViterbiFeature') #'../MyDataSet/DynDom/Perfect/ViterbiFeature'

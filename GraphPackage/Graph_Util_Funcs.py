@@ -133,7 +133,7 @@ def ConstructPerfectGraph(DisMxs, Membership, Construct_Type=None, cut_off_thres
 
 
 def ConstructRealClusterGraph(DisMxs, Membership, Construct_Type=None, cut_off_threshold = None, init_membership = None):
-    from Graph_Config import NumberOfClusterInClusteringGraph
+    from GraphPackage.Graph_Config import NumberOfClusterInClusteringGraph
     G = ConstructGraph(DisMxs, Construct_Type, cut_off_threshold)
 
     val = 0.75
@@ -208,7 +208,7 @@ def partition_gievenNumPar(G, NumPar= None, edge_weight_factors = None):
     return (partitions, thres)
 
 def writeArrayG2File(Arr_G, Path2File):
-    from MyIO import WriteList2File
+    from Utils.MyIO import WriteList2File
     L = []
     for G in Arr_G:
         line = '\t'.join([str(v['OriginalIndex']) for v in G.vs])

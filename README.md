@@ -18,11 +18,21 @@
     (sudo apt-get install -y clustalo)
 
 # Usage
-    There are two ways to use this software.
-    The users could either calculate rigid domains via a PDB file 
-    which contains all protein conformations or a list of PDBIDs.
-    For example:
-    First, we initializeRea an object RigidDomainFinder
+    Clone this project and go to the project main directory (Protein-Rigid-Domains-Estimation)
+    Go to python3 console and run the followings:
+        >>> import sys
+        >>> sys.path.append('./venv/lib/python3.5/site-packages')
+        >>> from mainPackage.Functions import RigidDomainFinder
+        >>> RDF = RigidDomainFinder()
+        # Method 1: run from pdb file
+        >>> PredLabels = RDF.segment_by_PDBFile('./test/data/adk.pdb','ADK','A')
+        # Method 2: run from a list of PDB IDs and their chain IDs
+        >>> PredLabels = RDF.segment_by_PDBIDs(['1ake_A','4ake_A'])
+        # Method 3: run from MD-like xyz format file
+        >>> PredLabels =  RDF.segment_by_xyzFormat('./test/data/lysozyme.xyz')
+        
+    
+    # parameters setting when create an instance of RigidDomainFinder
     RDF = RigidDomainFinder(AA_cutoff_neighborhood = 7.5, init_membership = None, merging_threshold=1.0,
                             rigidity_threshold=3.5)
         # parameters:
@@ -34,24 +44,9 @@
                 The default value is 1.0
             rigidity_threshold: a RMSD threshold to decide if this domain is rigid
                 Default value is 3.5 (in Angstrong)
-    # Then, we run the algorithm
-    # Method 1: given the list of PDBIDs
-    PredLabels = RDF.segment_by_PDBIDs(Lst_PDBs=['1ake_A', '4ake_A'])
-        # parameter: Lst_PDBs: a list contains all PDBIDs and their chainID
-    # Method 2: given a path to PDB file. 
-        This file contains all models of a protein chain. An example could be found at file 'adk.pdb'
-    PredLabels = RDF.segment_by_PDBFile(Path2PDBFile='test/data/adk.pdb',PDBID='ADK',ChainID='A')
-        # parameters:
-            Path2PDBFile: a path 2 PDB file
-            PDBID: any string (not important to the algorithm)
-            ChainID: Chain ID of a protein
-    # Method 3: given a path to VMD-like xyz format file
-    PredLabels = rf.segment_by_xyzFormat('test/data/lysozyme.xyz')
-    # Notice: when two or more protein conformations have different size, 
-        we use Clustal Omega to allign those sequences
-    # An example of how to use the software could be found at mainPackage/main.py
-    # Hint: clone this project, open with Pycharm and run file mainPackage/main.py
-        to have the impression how this algorithm works    
+    
+    # An example of how to use the software could be found at test/
+       
     
 Protein-Rigid-Domains-Estimation is open source and distributed under OSI-approved MIT license. ::
 

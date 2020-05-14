@@ -14,7 +14,7 @@ def align_o(sequences):
     :param sequences: Input sequences
     :return: aligned masks
     '''
-    from clustalo import align
+    from mainPackage.clustalo import align
     align1 = align(sequences)
     L, N = align1.length, align1.size
     mask = np.zeros((N, L), 'i')

@@ -6,7 +6,8 @@ from GraphPackage.AssistantObjects import Feature_Workhouse
 from GraphPackage.AssistantObjects import DynDomEntry
 from csb.bio.utils import rmsd
 from mainPackage.PathAndDir import Dir2TmpFile
-from GraphPackage.Graph_Config import Path2ViterbiJar
+#from GraphPackage.Graph_Config import Path2ViterbiJar
+from mainPackage.PathAndDir import Path2ViterbiJar
 from Utils.MyIO import ReadViterbiOutFile
 
 class D_Graph(Graph, object):
@@ -144,7 +145,7 @@ class D_Graph(Graph, object):
             Arr.append(tmpG.subgraph(C))
         return Arr
     def do_work_2(self):
-        from PathAndDir import Dir2TmpFile
+        from mainPackage.PathAndDir import Dir2TmpFile
         # create Line Graph and run viterbi to detect cross-boder edges
         # Entry = self['DynDomEntry']
         # SquareMatFeature = self.calc_squareMatFeature(Entry.DistanceMatrices)
@@ -232,7 +233,7 @@ class D_Graph(Graph, object):
             tmpG = stack.pop()
             if tmpG.rmsd() < rmsd_thres or len(tmpG.es) == 0:
                 Arr_G.append(tmpG)
-                print ('My P: {}'.format(str(tmpG['P'])))
+                #print ('My P: {}'.format(str(tmpG['P'])))
             else:
                 tmp_Arr = tmpG.do_work_2()
                 if len(tmp_Arr) == 1 and len(tmp_Arr[0].es) == len(tmpG.es):
@@ -730,8 +731,8 @@ class D_LineGraph(D_Graph, object):
         Lines.append("edges:")
         for i in range(fea_edge.shape[0]):
             Lines.append('\t'.join(str(val) for val in fea_edge[i,:]))
-        import MyIO
-        MyIO.WriteList2File(Path2OutFile, Lines)
+        from Utils.MyIO import WriteList2File
+        WriteList2File(Path2OutFile, Lines)
     def runViterbi(self, Path2ViterbiJar, Path2FeatureFile, Path2OutFile):
         import subprocess
         subprocess.call(['java', '-jar', Path2ViterbiJar, Path2FeatureFile, Path2OutFile, '10000'])

@@ -1,4 +1,4 @@
-from PathAndDir import Dir2LineGraph
+from mainPackage.PathAndDir import Dir2LineGraph
 import numpy as np
 import igraph as ig
 import matplotlib.pyplot as plt
