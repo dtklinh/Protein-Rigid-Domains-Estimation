@@ -2,7 +2,7 @@
     Given the protein structural conformations, this program estimates the rigid domains in this protein.
 # Compatibility
     Ubuntu 16.04 LTS or later
-    Python 3.5 or later
+    Python 3.5
 # Python packages dependencies:
     biopython (1.73 or later) from https://biopython.org/
     csb (1.2.5 or later) from https://csb.codeplex.com/
@@ -19,7 +19,7 @@
 
 # Usage
     Clone this project and go to the project main directory (Protein-Rigid-Domains-Estimation)
-    Go to python3 console and run the followings:
+    Go to python3.5 console and run the followings:
         >>> import sys
         >>> sys.path.append('./venv/lib/python3.5/site-packages')
         >>> from mainPackage.Functions import RigidDomainFinder
