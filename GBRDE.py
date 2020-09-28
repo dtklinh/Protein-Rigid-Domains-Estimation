@@ -37,7 +37,7 @@ merging_thres = 1.0
 for opt, arg in opts:
     print(opt,arg,'\n')
     if opt in ('-h', '--help'):
-        print('GBDE.py -n <ProteinName> -t <TypeOfFile> -i <inputfile> -a <AA_cutoff> -m <init_membership>, -r <rigid_thres> -g <merging_thres>')
+        print('GBDE.py -n <ProteinName> -t <TypeOfFile> -i <inputfile> -a <AA_cutoff> -m <init_membership>, -r <rigid_thres> -g <merging_thres> -o <output_directory>')
         sys.exit()
     elif opt in ('-n', '--name'):
         name = str(arg)
@@ -64,7 +64,7 @@ for opt, arg in opts:
     elif opt in ('-o', '--output_folder'):
         OutFolder = str(arg)
     else:
-        print('GBDE.py -n <ProteinName> -t <TypeOfFile> -i <inputfile> -a <AA_cutoff> -m <init_membership>, -r <rigid_thres> -g <merging_thres>')
+        print('GBDE.py -n <ProteinName> -t <TypeOfFile> -i <inputfile> -a <AA_cutoff> -m <init_membership>, -r <rigid_thres> -g <merging_thres> -o <output_directory>')
         sys.exit()
 
 PredLabels = []
