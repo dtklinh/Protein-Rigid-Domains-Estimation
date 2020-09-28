@@ -1,0 +1,22 @@
+# go to virtual environtment
+. ./venv/bin/activate
+
+# GBDE.py parameters:
+    -n <ProteinName> # any name
+    -t <TypeOfFile>  # one in three {'list', 'pdb', 'xyz'}
+    -i <inputfile>   # if TypeOfFile is 'pdb' or 'xyz', then it is a path to a file
+                        if TypeOfFile is 'list', it is a list, e.g. '1ake_A, 4ake_A'
+    -a <AA_cutoff>  # default: 7.5
+    -m <init_membership>, # default: None
+    -r <rigid_thres>   # default: 3.5
+    -g <merging_thres> # default: 1.0
+    -o <output_directory>' # default: current working directory
+
+# run by a list of PDBID, for example
+python3 GBRDE.py -n 'adk' -t 'list' -i '1ake_A, 4ake_A' -a 7.5 -r 3.5 -g 1.0
+
+# run by a xyz file, for example
+python3 GBRDE.py -n 'lys' -t 'xyz' -i '.test/data/lysozyme.xyz' -a 7.5 -r 3.5 -g 1.0
+
+# run by a pdb file, for example
+python3 GBRDE.py -n 'adk' -t 'pdb' -i './test/data/adk.pdb' -a 7.5 -r 3.5 -g 1.0
