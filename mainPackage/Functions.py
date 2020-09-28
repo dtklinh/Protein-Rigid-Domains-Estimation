@@ -46,6 +46,9 @@ def run_Alg(XYZ, Serial = 'ADK', cutoff_neighborhood = 7.5, init_membership = No
 
     Mem = [0]*DisMatrices.shape[1]
     Entry = DynDomEntry(None, Mem, DisMatrices, XYZ)
+    #from GraphPackage.Graph_Config import NumberOfClusterInClusteringGraph
+    from GraphPackage.Graph_Util_Funcs import ConstructGraph
+    ProtG = ConstructGraph(Entry.DistanceMatrices, G_ConstructType, cutoff_neighborhood)
     G = ConstructRealClusterGraph(Entry.DistanceMatrices, Entry.Membership,init_membership = init_membership,
                                   Construct_Type=G_ConstructType, cut_off_threshold=cutoff_neighborhood)
     SquareMatFeature = G.calc_squareMatFeature(Entry.DistanceMatrices)
@@ -68,7 +71,7 @@ def run_Alg(XYZ, Serial = 'ADK', cutoff_neighborhood = 7.5, init_membership = No
             for i in v['Cluster']:
                 PredLabels[i] = idx
     PredLabels = [i for j, i in enumerate(PredLabels) if j not in delete_indexs]
-    return PredLabels
+    return PredLabels, ProtG
 
 class RigidDomainFinder(object):
     def __init__(self, AA_cutoff_neighborhood = 7.5, init_membership = None, merging_threshold=1.0, rigidity_threshold = 3.5):
@@ -76,15 +79,18 @@ class RigidDomainFinder(object):
         self.init_membership = init_membership
         self.merging_threshold = merging_threshold
         self.rigidity_threshold = rigidity_threshold
+        self.ProteinGraph = None
     def segment_by_PDBIDs(self, Lst_PDBs:list):
         struct = PreProcess_PDBIDs(Lst_PDBs)
-        PredLabels = run_Alg(struct,'Protein_name',self.AA_cutoff_neighborhood,self.init_membership,
+        PredLabels, ProtG = run_Alg(struct,'Protein_name',self.AA_cutoff_neighborhood,self.init_membership,
                              self.merging_threshold, self.rigidity_threshold)
+        self.ProteinGraph = ProtG
         return PredLabels
     def segment_by_PDBFile(self,Path2PDBFile:str, PDBID:str,ChainID:str):
         struct = PreProcess_Local(Path2PDBFile,PDBID,ChainID)
-        PredLabels = run_Alg(struct,PDBID, self.AA_cutoff_neighborhood,self.init_membership,
+        PredLabels, ProtG = run_Alg(struct,PDBID, self.AA_cutoff_neighborhood,self.init_membership,
                              self.merging_threshold, self.rigidity_threshold)
+        self.ProteinGraph = ProtG
         return PredLabels
     def segment_by_xyzFormat(self, Path_to_xyz_format:str):
         from MDAnalysis.coordinates.XYZ import XYZReader
@@ -93,10 +99,12 @@ class RigidDomainFinder(object):
         for idx, ts in enumerate(rd.trajectory):
             tmp = ts.positions
             Structs[idx,:,:] = tmp
-        PredLabels = run_Alg(Structs,'Name',self.AA_cutoff_neighborhood,self.init_membership,
+        PredLabels, ProtG = run_Alg(Structs,'Name',self.AA_cutoff_neighborhood,self.init_membership,
                              self.merging_threshold, self.rigidity_threshold)
+        self.ProteinGraph = ProtG
         return PredLabels
-
+    def get_protein_graph(self):
+        return self.ProteinGraph
 
 
 if __name__=="__main__":
