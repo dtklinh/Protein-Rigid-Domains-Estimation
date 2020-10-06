@@ -5,7 +5,7 @@ sys.path.append(os.getcwd())
 sys.path.append(os.path.join(os.getcwd(),'venv/bin'))
 sys.path.append(os.path.join(os.getcwd(),'venv/lib/python3.5/site-packages'))
 
-os.system('. ./venv/bin/activate')
+#os.system('. ./venv/bin/activate')
 #sys.exit(1)
 
 from mainPackage.Functions import RigidDomainFinder
@@ -89,7 +89,7 @@ else:
 ProtG = rdf.get_protein_graph()
 ##---------------------------------------
 ProtG.vs['color']= [List_Colors[idx] for idx in PredLabels]
-out = ig.plot(ProtG)
-out.save(os.path.join(OutFolder,name+'.png'))
+out = ig.plot(ProtG, target= os.path.join(OutFolder,name+'.png'), inline=True)
+#out.save(os.path.join(OutFolder,name+'.png'))
 import numpy as np
 np.savetxt(os.path.join(OutFolder,name+'.csv'), PredLabels, delimiter=",", fmt='%s')
